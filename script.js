@@ -1,108 +1,124 @@
-async function fetchMedia() {
+function showPlatform(platform) {
+  // Reset all platforms
+  const allBtns = document.querySelectorAll('.platform-btn');
+  allBtns.forEach(btn => btn.classList.remove('selected'));
+
+  // Hide all sections
+  document.getElementById('tiktok-section').style.display = 'none';
+  document.getElementById('instagram-section').style.display = 'none';
+
+  // Show the selected section and highlight the selected button
+  if (platform === 'tiktok') {
+    document.getElementById('tiktok-section').style.display = 'block';
+    document.querySelectorAll('.platform-btn')[0].classList.add('selected');
+  } else if (platform === 'instagram') {
+    document.getElementById('instagram-section').style.display = 'block';
+    document.querySelectorAll('.platform-btn')[1].classList.add('selected');
+  }
+
+  // Clear previous media result when switching platform
+  document.getElementById('media-preview').innerHTML = '';
+  document.getElementById('result').style.display = 'none';
+}
+
+async function fetchTikTok() {
   const url = document.getElementById('tiktok-url').value;
   if (!url) {
-    alert("Silakan masukkan URL.");
-    return;
-  }
-
-  // Menentukan endpoint berdasarkan platform
-  let apiUrl = '';
-  let allowMusicDownload = false; // Variabel untuk mengecek apakah musik bisa diunduh
-
-  if (url.includes('tiktok.com')) {
-    apiUrl = `https://api.deline.web.id/downloader/tiktok?url=${encodeURIComponent(url)}`;
-    allowMusicDownload = true; // TikTok mengizinkan audio
-  }
-  // Platform lain yang hanya mengizinkan pengunduhan video
-  else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    apiUrl = `https://fgsi.dpdns.org/api/downloader/youtube/v2?apikey=fgsiapi-7f1e321-6d&url=${encodeURIComponent(url)}&type=`;
-  } else if (url.includes('instagram.com')) {
-    apiUrl = `https://fgsi.dpdns.org/api/downloader/instagram?apikey=fgsiapi-7f1e321-6d&url=${encodeURIComponent(url)}`;
-  } else if (url.includes('terabox.com')) {
-    apiUrl = `https://fgsi.dpdns.org/api/downloader/terabox?apikey=fgsiapi-7f1e321-6d&url=${encodeURIComponent(url)}`;
-  } else if (url.includes('capcut.com')) {
-    apiUrl = `https://fgsi.dpdns.org/api/downloader/capcut?apikey=fgsiapi-7f1e321-6d&url=${encodeURIComponent(url)}`;
-  } else {
-    alert("Platform tidak dikenali. Harap masukkan URL yang valid.");
+    alert("Masukkan URL TikTok!");
     return;
   }
 
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(`https://api.deline.web.id/downloader/tiktok?url=${encodeURIComponent(url)}`);
     const data = await response.json();
 
     if (data.status) {
-      let videoLink, musicLink;
-      
-      // Cek apakah hasilnya berasal dari TikTok atau platform lain
-      if (url.includes('tiktok.com') && data.result) {
-        // TikTok - Dapatkan video dan musik
-        videoLink = data.result.download;
-        if (allowMusicDownload && data.result.music) {
-          musicLink = data.result.music;
-        }
-      } else if (!url.includes('tiktok.com') && data.data) {
-        // Platform lain - Dapatkan hanya video
-        videoLink = data.data.url[0].url;
-      }
+      const videoLink = data.result.download;
+      const musicLink = data.result.music;
 
-      const resultDiv = document.getElementById('result');
-      resultDiv.style.display = 'block';
+      const mediaPreview = document.getElementById('media-preview');
+      mediaPreview.innerHTML = `<video controls><source src="${videoLink}" type="video/mp4"></video>`;
 
-      const videoElement = document.getElementById('video-preview');
-      const videoSource = document.getElementById('video-source');
-      
-      if (videoLink) {
-        videoSource.src = videoLink;
-        videoElement.load();
-      }
-
-      // Tombol unduh hanya aktif jika link video atau musik ada
       document.getElementById('download-video-btn').disabled = !videoLink;
       document.getElementById('download-music-btn').disabled = !musicLink;
 
-      // Menyimpan link download secara global
       window.videoDownloadLink = videoLink;
       window.musicDownloadLink = musicLink;
+
+      document.getElementById('result').style.display = 'block';
     } else {
-      alert("Error: Tidak dapat mengambil media. Periksa URL dan coba lagi.");
+      alert("Gagal mengambil video TikTok.");
     }
   } catch (error) {
     console.error('Error:', error);
-    alert("Terjadi kesalahan. Silakan coba lagi.");
+    alert("Terjadi kesalahan, coba lagi.");
   }
 }
 
-// Fungsi untuk memulai download otomatis
+async function fetchInstagram() {
+  const url = document.getElementById('instagram-url').value;
+  if (!url) {
+    alert("Masukkan URL Instagram!");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.deline.web.id/downloader/ig?url=${encodeURIComponent(url)}`);
+    const data = await response.json();
+
+    if (data.status) {
+      const videoLink = data.result.media.videos[0];
+      const imageLink = data.result.media.images[0];
+
+      const mediaPreview = document.getElementById('media-preview');
+      if (videoLink) {
+        mediaPreview.innerHTML = `<video controls><source src="${videoLink}" type="video/mp4"></video>`;
+      } else if (imageLink) {
+        mediaPreview.innerHTML = `<img src="${imageLink}" alt="Instagram Image">`;
+      }
+
+      document.getElementById('download-video-btn').disabled = !videoLink;
+      document.getElementById('download-music-btn').disabled = true; // No music for Instagram
+
+      window.videoDownloadLink = videoLink;
+
+      document.getElementById('result').style.display = 'block';
+    } else {
+      alert("Gagal mengambil media dari Instagram.");
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("Terjadi kesalahan, coba lagi.");
+  }
+}
+
 function autoDownload(type) {
   let downloadLink = type === 'video' ? window.videoDownloadLink : window.musicDownloadLink;
 
   if (downloadLink) {
-    const fileName = generateRandomFilename(type);
-    
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", downloadLink, true);
-    xhr.responseType = "blob";
-    
-    xhr.onload = function() {
-      const blob = xhr.response;
-      const a = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    };
-    
-    xhr.send();
-  }
-}
+    // Fetch the file from the URL and create a Blob
+    fetch(downloadLink)
+      .then(response => response.blob())  // Convert response to Blob
+      .then(blob => {
+        const a = document.createElement("a");
+        const url = URL.createObjectURL(blob);  // Create object URL for the Blob
+        a.href = url;
+        a.download = type === 'video' ? "video.mp4" : "audio.mp3";
+        
+        // Trigger download directly, no delay
+        document.body.appendChild(a);
+        a.click();  // Start download
+        document.body.removeChild(a);
 
-// Fungsi untuk menghasilkan nama file acak
-function generateRandomFilename(type) {
-  const randomString = Math.random().toString(36).substring(2, 15); // Membuat string acak
-  const extension = type === 'video' ? 'mp4' : 'mp3'; // Menentukan ekstensi berdasarkan jenis media
-  return `${randomString}.${extension}`; // Mengembalikan nama file yang diacak
+        // Clean up the object URL
+        URL.revokeObjectURL(url);
+      })
+      .catch(err => {
+        console.error('Download failed:', err);
+        alert("Terjadi kesalahan dalam mengunduh file.");
+      });
+
+    // Pratinjau media tetap terlihat setelah unduhan
+    // Optionally, you can show a confirmation message like "Download started" or "Download complete"
+  }
 }
