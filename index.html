@@ -3,24 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Downloader All</title>
+  <title>Social Media Downloader</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
   <div class="container">
-    <h1>Downloader Video And Music</h1>
-    <input type="text" id="tiktok-url" placeholder="Masukkan URL Video TikTok" />
-    <button onclick="fetchVideo()">Download</button>
+    <div class="header">
+      <img src="https://via.placeholder.com/150" alt="Logo" class="logo">
+      <h1>Social Media Downloader</h1>
+    </div>
 
+    <div class="platform-selector">
+      <button class="platform-btn" onclick="showPlatform('tiktok')">TikTok Downloader</button>
+      <button class="platform-btn" onclick="showPlatform('instagram')">Instagram Downloader</button>
+    </div>
+
+    <!-- TikTok Section -->
+    <div class="download-section" id="tiktok-section" style="display:none;">
+      <h3>TikTok Downloader</h3>
+      <input type="text" id="tiktok-url" placeholder="Masukkan URL TikTok">
+      <button class="download-btn" onclick="fetchTikTok()">Download TikTok</button>
+    </div>
+
+    <!-- Instagram Section -->
+    <div class="download-section" id="instagram-section" style="display:none;">
+      <h3>Instagram Downloader</h3>
+      <input type="text" id="instagram-url" placeholder="Masukkan URL Instagram">
+      <button class="download-btn" onclick="fetchInstagram()">Download Instagram</button>
+    </div>
+
+    <!-- Result Section -->
     <div class="result" id="result">
-      <h3>Pratinjau Video</h3>
-      <video id="video-preview" controls>
-        <source id="video-source" src="" type="video/mp4">
-        Browser Anda tidak mendukung tag video.
-      </video>
-      <button id="download-video-btn" onclick="autoDownload('video')" disabled>Download Video</button>
-      <button id="download-music-btn" onclick="autoDownload('music')" disabled>Download Musik</button>
+      <h3>Pratinjau Media</h3>
+      <div id="media-preview"></div>
+      <div class="download-buttons">
+        <button id="download-video-btn" onclick="autoDownload('video')" disabled>Download Video</button>
+        <button id="download-music-btn" onclick="autoDownload('music')" disabled>Download Music</button>
+      </div>
     </div>
   </div>
 
@@ -29,6 +48,5 @@
   </div>
 
   <script src="script.js"></script>
-
 </body>
 </html>
