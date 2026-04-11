@@ -13,6 +13,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Menjaga agar body memiliki tinggi minimal 100% */
+  padding-bottom: 60px; /* Memberi ruang agar footer tidak tumpang tindih */
 }
 
 .container {
@@ -111,6 +112,103 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+button:hover {
+  background-color: #ff3b2f;  /* Merah lebih terang saat hover */
+}
+
+.result {
+  margin-top: 20px;
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 10px;
+  display: none;
+}
+
+.result video {
+  width: 100%;
+  max-height: 400px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.result img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+button:disabled {
+  background-color: #666;
+}
+
+/* Styling untuk logo */
+.logo-container {
+  display: flex;
+  justify-content: center;  /* Menempatkan logo di tengah horizontal */
+  align-items: center;      /* Menempatkan logo di tengah vertical */
+  margin-bottom: 20px;      /* Jarak dengan judul */
+}
+
+.logo {
+  width: 120px;  /* Ukuran logo lebih besar */
+  height: auto;
+  object-fit: contain;
+}
+
+/* Styling untuk footer */
+.footer {
+  font-size: 14px;
+  color: #bbb;
+  position: fixed;   /* Membuat footer selalu di bawah */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #111;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  border-top: 2px solid #ff5e57;  /* Garis pemisah */
+}
+
+.footer a {
+  color: #ff5e57;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.download-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .platform-btn {
+    font-size: 18px;
+    padding: 15px;
+  }
+
+  input[type="text"] {
+    font-size: 18px;
+    padding: 15px;
+  }
+    }}
 
 button:hover {
   background-color: #ff3b2f;  /* Merah lebih terang saat hover */
