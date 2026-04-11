@@ -86,6 +86,20 @@ h1 {
   width: 100%;
 }
 
+/* Styling untuk logo */
+.logo-container {
+  display: flex;
+  justify-content: center;  /* Menempatkan logo di tengah horizontal */
+  align-items: center;      /* Menempatkan logo di tengah vertical */
+  margin-bottom: 30px;      /* Jarak dengan judul */
+}
+
+.logo {
+  width: 200px;  /* Ukuran logo lebih besar */
+  height: auto;
+  object-fit: contain;
+}
+
 .input-container input[type="text"] {
   width: 100%;
   padding: 15px;
@@ -190,4 +204,4 @@ button:disabled {
     font-size: 18px;
     padding: 15px;
   }
-}
+  }
