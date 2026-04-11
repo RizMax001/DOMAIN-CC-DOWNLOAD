@@ -117,8 +117,10 @@ function autoDownload(type) {
         console.error('Download failed:', err);
         alert("Terjadi kesalahan dalam mengunduh file.");
       });
-
-    // Pratinjau media tetap terlihat setelah unduhan
-    // Optionally, you can show a confirmation message like "Download started" or "Download complete"
   }
+}
+
+// Function to clear input field when '❌' is clicked
+function clearInput(inputId) {
+  document.getElementById(inputId).value = ''; // Mengosongkan isi input field
 }
