@@ -5,15 +5,14 @@
 }
 
 body {
-  background-color: #000; /* Background hitam */
+  background-color: #111; /* Background hitam */
   color: #fff;
   font-family: 'Poppins', sans-serif;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  text-align: center;
-  flex-direction: column;
+  min-height: 100vh; /* Menjaga agar body memiliki tinggi minimal 100% */
 }
 
 .container {
@@ -23,6 +22,7 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 500px;
+  flex: 1;  /* Menggunakan flex untuk memastikan konten utama mengisi ruang yang ada */
 }
 
 h1 {
@@ -86,20 +86,6 @@ h1 {
   width: 100%;
 }
 
-/* Styling untuk logo */
-.logo-container {
-  display: flex;
-  justify-content: center;  /* Menempatkan logo di tengah horizontal */
-  align-items: center;      /* Menempatkan logo di tengah vertical */
-  margin-bottom: 30px;      /* Jarak dengan judul */
-}
-
-.logo {
-  width: 200px;  /* Ukuran logo lebih besar */
-  height: auto;
-  object-fit: contain;
-}
-
 .input-container input[type="text"] {
   width: 100%;
   padding: 15px;
@@ -155,16 +141,31 @@ button:disabled {
   background-color: #666;
 }
 
+/* Styling untuk logo */
+.logo-container {
+  display: flex;
+  justify-content: center;  /* Menempatkan logo di tengah horizontal */
+  align-items: center;      /* Menempatkan logo di tengah vertical */
+  margin-bottom: 20px;      /* Jarak dengan judul */
+}
+
+.logo {
+  width: 120px;  /* Ukuran logo lebih besar */
+  height: auto;
+  object-fit: contain;
+}
+
+/* Styling untuk footer */
 .footer {
   font-size: 14px;
   color: #bbb;
-  margin-top: 20px;
+  margin-top: 20px;   /* Memberi jarak antara konten utama dan footer */
+  padding: 10px;      /* Memberi ruang di dalam footer */
   text-align: center;
   width: 100%;
-  border-top: 2px solid #ff5e57;
+  border-top: 2px solid #ff5e57;  /* Garis pemisah */
   position: absolute;
   bottom: 0;
-  padding: 10px;
 }
 
 .footer a {
@@ -204,4 +205,4 @@ button:disabled {
     font-size: 18px;
     padding: 15px;
   }
-  }
+}
