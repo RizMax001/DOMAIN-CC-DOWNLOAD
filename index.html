@@ -3,32 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Media Downloader</title>
+  <title>Tiktok And Instagram Downloader</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      
-      <h1>Social Media Downloader</h1>
-    </div>
+    <h1>TT And Ig Downloader </h1>
 
     <div class="platform-selector">
-      <button class="platform-btn" onclick="showPlatform('tiktok')">TikTok Downloader</button>
-      <button class="platform-btn" onclick="showPlatform('instagram')">Instagram Downloader</button>
+      <button class="platform-btn tiktok-btn" onclick="showPlatform('tiktok')">
+        TikTok Downloader
+      </button>
+      <button class="platform-btn instagram-btn" onclick="showPlatform('instagram')">
+        Instagram Downloader
+      </button>
     </div>
 
     <!-- TikTok Section -->
     <div class="download-section" id="tiktok-section" style="display:none;">
       <h3>TikTok Downloader</h3>
-      <input type="text" id="tiktok-url" placeholder="Masukkan URL TikTok">
+      <div class="input-container">
+        <input type="text" id="tiktok-url" placeholder="Masukkan URL TikTok">
+      </div>
       <button class="download-btn" onclick="fetchTikTok()">Download TikTok</button>
     </div>
 
     <!-- Instagram Section -->
     <div class="download-section" id="instagram-section" style="display:none;">
       <h3>Instagram Downloader</h3>
-      <input type="text" id="instagram-url" placeholder="Masukkan URL Instagram">
+      <div class="input-container">
+        <input type="text" id="instagram-url" placeholder="Masukkan URL Instagram">
+      </div>
       <button class="download-btn" onclick="fetchInstagram()">Download Instagram</button>
     </div>
 
@@ -44,7 +49,8 @@
   </div>
 
   <div class="footer">
-    <p>Made with ❤️ by RizkyMaxz</p>
+    <p>Made with ❤️ by <a href="https://tiktok.com/@ben.mister.ben" target="_blank">RizkyMaxz</a></p>
+    <p>© 2026 Social Media Downloader. All rights reserved.</p>
   </div>
 
   <script src="script.js"></script>
