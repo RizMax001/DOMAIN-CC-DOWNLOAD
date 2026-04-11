@@ -5,9 +5,9 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #111;
+  background-color: #000; /* Background hitam */
   color: #fff;
+  font-family: 'Poppins', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,31 +17,19 @@ body {
 }
 
 .container {
+  background: #1a1a1a;  /* Latar belakang gelap */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 500px;
-  padding: 20px;
-  background: #1a1a1a;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.logo {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
 }
 
 h1 {
   font-size: 28px;
   font-weight: 600;
   color: #fff;
+  margin-bottom: 20px;
 }
 
 .platform-selector {
@@ -51,28 +39,34 @@ h1 {
 }
 
 .platform-btn {
+  color: white;
   padding: 12px;
-  background-color: #333;
-  color: #fff;
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  width: 48%;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s;
+  transition: background-color 0.3s ease;
+  width: 48%;
+}
+
+.tiktok-btn {
+  background-color: #1da1f2; /* Biru terang untuk TikTok */
+}
+
+.instagram-btn {
+  background-color: #ff5e57; /* Merah cerah untuk Instagram */
 }
 
 .platform-btn:hover {
-  background-color: #444;
   transform: scale(1.05);
 }
 
 .platform-btn.selected {
-  background-color: #005df7;
+  opacity: 0.8;
 }
 
 .download-section {
-  background-color: #333;
+  background-color: #333;  /* Latar belakang abu gelap */
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -81,27 +75,35 @@ h1 {
 .download-section h3 {
   font-size: 20px;
   margin-bottom: 10px;
+  color: #fff;
 }
 
-input[type="text"] {
+/* Container untuk input field */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 12px;
+}
+
+.input-container input[type="text"] {
+  width: 100%;
+  padding: 15px;
   font-size: 16px;
   border-radius: 8px;
-  border: none;
-  margin-bottom: 15px;
+  border: 2px solid #ff5e57;  /* Warna merah cerah */
   background-color: #444;
   color: #fff;
 }
 
-input[type="text"]:focus {
-  border: 2px solid #ff5e57;
+.download-section button {
+  margin-top: 20px;  /* Jarak antara input dan tombol download */
 }
 
 button {
   width: 100%;
   padding: 12px;
-  background-color: #ff5e57;
+  background-color: #ff5e57;  /* Merah Cerah */
   color: white;
   border: none;
   border-radius: 8px;
@@ -111,7 +113,7 @@ button {
 }
 
 button:hover {
-  background-color: #ff3b2f;
+  background-color: #ff3b2f;  /* Merah lebih terang saat hover */
 }
 
 .result {
@@ -145,6 +147,19 @@ button:disabled {
   margin-top: 20px;
   text-align: center;
   width: 100%;
+  border-top: 2px solid #ff5e57;
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+}
+
+.footer a {
+  color: #ff5e57;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .download-buttons {
@@ -164,5 +179,15 @@ button:disabled {
 
   button {
     font-size: 16px;
+  }
+
+  .platform-btn {
+    font-size: 18px;
+    padding: 15px;
+  }
+
+  input[type="text"] {
+    font-size: 18px;
+    padding: 15px;
   }
 }
