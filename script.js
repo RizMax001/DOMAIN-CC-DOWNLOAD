@@ -12,7 +12,7 @@ function hideLoading() {
 
 // Fungsi untuk mendapatkan media dari URL yang dimasukkan
 async function fetchMedia() {
-  const url = document.getElementById('url').value;
+  const url = document.getElementById('url').value.trim();  // Mengambil dan membersihkan input URL
   if (!url) {
     alert("Masukkan URL!");
     return;
@@ -29,7 +29,7 @@ async function fetchMedia() {
 
     hideLoading();  // Menghilangkan spinner setelah mendapatkan hasil
 
-    if (data.status) {
+    if (data.status && data.result && data.result.medias) {
       const mediaPreview = document.getElementById('media-preview');
       const resultSection = document.getElementById('result');
       const medias = data.result.medias;
@@ -54,18 +54,19 @@ async function fetchMedia() {
         }
       });
 
+      // Menyimpan link unduhan untuk masing-masing tipe media
       window.videoDownloadLink = videoMedia?.url;
       window.musicDownloadLink = medias.find(m => m.type === 'audio')?.url;
       window.imageDownloadLink = medias.find(m => m.type === 'image')?.url;
 
       document.getElementById('result').style.display = 'block';
     } else {
-      alert("Gagal mengambil media.");
+      alert("Gagal mengambil media. Pastikan URL benar.");
     }
   } catch (error) {
     hideLoading();  // Menyembunyikan spinner jika terjadi kesalahan
     console.error('Error:', error);
-    alert("Terjadi kesalahan, coba lagi.");
+    alert("Terjadi kesalahan saat mengambil data. Pastikan URL benar dan coba lagi.");
   }
 }
 
@@ -93,7 +94,7 @@ function autoDownload(type) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         // Menghapus semua media pratinjau setelah download selesai
         clearPreview();
         document.getElementById('result').style.display = 'none';  // Sembunyikan hasil setelah download
