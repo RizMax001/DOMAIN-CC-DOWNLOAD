@@ -54,6 +54,7 @@ async function fetchMedia() {
         }
       });
 
+      // Menyimpan URL media untuk digunakan saat download
       window.videoDownloadLink = videoMedia?.url;
       window.musicDownloadLink = medias.find(m => m.type === 'audio')?.url;
       window.imageDownloadLink = medias.find(m => m.type === 'image')?.url;
@@ -93,7 +94,7 @@ function autoDownload(type) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         // Menghapus semua media pratinjau setelah download selesai
         clearPreview();
         document.getElementById('result').style.display = 'none';  // Sembunyikan hasil setelah download
