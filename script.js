@@ -73,22 +73,28 @@ async function fetchMedia() {
 // Fungsi untuk mendownload media (video, musik, gambar)
 function autoDownload(type) {
   let downloadLink;
+  let fileExtension;
+
   if (type === 'video') {
     downloadLink = window.videoDownloadLink;
+    fileExtension = 'mp4';
   } else if (type === 'music') {
     downloadLink = window.musicDownloadLink;
+    fileExtension = 'mp3';
   } else if (type === 'image') {
     downloadLink = window.imageDownloadLink;
+    fileExtension = 'jpg';
   }
 
   if (downloadLink) {
+    const filename = generateRandomFileName(fileExtension);
     fetch(downloadLink)
       .then(response => response.blob())
       .then(blob => {
         const a = document.createElement('a');
         const url = URL.createObjectURL(blob);
         a.href = url;
-        a.download = `file_${new Date().getTime()}_${Math.random().toString(36).substr(2, 5)}.${type === 'video' ? 'mp4' : type === 'music' ? 'mp3' : 'jpg'}`;  // Nama file dinamis berdasarkan tipe
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -103,6 +109,13 @@ function autoDownload(type) {
         alert("Terjadi kesalahan dalam mengunduh file.");
       });
   }
+}
+
+// Membuat nama file acak untuk setiap media
+function generateRandomFileName(extension) {
+  const timestamp = new Date().getTime();
+  const randomSuffix = Math.random().toString(36).substr(2, 5);
+  return `file_${timestamp}_${randomSuffix}.${extension}`;
 }
 
 // Fungsi untuk membersihkan semua elemen pratinjau media
