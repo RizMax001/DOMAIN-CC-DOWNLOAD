@@ -1,0 +1,275 @@
+/* General reset and setup */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212; /* Dark background */
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+  flex-direction: column;
+  transition: background-color 0.5s ease; /* Transition for dark/light mode */
+}
+
+.container {
+  background: #1a1a1a; /* Dark background */
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 600px;
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 20px;
+  animation: slideIn 0.5s ease-out; /* Slide-in effect */
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); }
+  to { transform: translateY(0); }
+}
+
+.platform-selector {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.platform-btn {
+  background-color: #1da1f2; /* Blue for TikTok */
+  color: white;
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Hover effect */
+}
+
+.platform-btn:hover {
+  background-color: #0d8bf2;
+  transform: scale(1.1); /* Scale effect on hover */
+}
+
+.download-section {
+  background-color: #333;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  opacity: 0;
+  animation: fadeInUp 1s forwards; /* Fade-in up animation */
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.download-section h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.input-container input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #1da1f2;
+  background-color: #444;
+  color: #fff;
+  margin-bottom: 20px;
+  transition: border-color 0.3s ease;
+}
+
+.input-container input[type="text"]:focus {
+  border-color: #0d8bf2;
+}
+
+.download-btn {
+  background-color: #1da1f2;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #0d8bf2;
+  transform: scale(1.1);
+}
+
+.loading-spinner {
+  display: none;  /* Hidden by default */
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #1da1f2;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.result {
+  margin-top: 20px;
+  background-color: #2a2a2a;
+  padding: 25px;
+  border-radius: 10px;
+  display: none;
+  opacity: 0;
+  animation: fadeInUp 1s forwards;
+}
+
+.result h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.result video {
+  width: 100%;
+  max-width: 100%; /* Ensure video does not overflow */
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.result img {
+  width: 100%;
+  max-width: 500px;  /* Limit image size */
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adding shadow for effect */
+  transition: transform 0.3s ease;
+}
+
+.result img:hover {
+  transform: scale(1.05); /* Image zoom effect on hover */
+}
+
+#media-details {
+  color: #ddd;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#media-details h3 {
+  font-size: 28px;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#media-details h3:hover {
+  transform: scale(1.05);  /* Zoom effect on title */
+  color: #1da1f2;  /* Color changes on hover */
+}
+
+#media-details p {
+  font-size: 18px;
+  color: #bbb;
+  font-style: italic;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#media-details p:hover {
+  transform: scale(1.05);  /* Zoom effect on author */
+  color: #ff5e57;  /* Color changes on hover */
+}
+
+#media-details hr {
+  margin: 10px auto;
+  width: 60%;
+  border: 1px solid #fff;
+  opacity: 0.2;
+}
+
+.download-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.download-buttons button {
+  width: 48%;
+  padding: 12px;
+  background-color: #1da1f2;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.download-buttons button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.download-buttons button:hover:not(:disabled) {
+  background-color: #0d8bf2;
+  transform: scale(1.05);
+}
+
+.footer {
+  font-size: 14px;
+  color: #bbb;
+  margin-top: 40px;
+  text-align: center;
+  width: 100%;
+  border-top: 2px solid #1da1f2;
+  padding: 12px;
+}
+
+.footer a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
