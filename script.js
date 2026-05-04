@@ -1,25 +1,25 @@
 // Menampilkan loading spinner
 function showLoading() {
-  const spinner = document.getElementById('loading-spinner');
-  spinner.style.display = 'block';  // Menampilkan spinner loading
+  const spinner = document.querySelector('.loading-spinner');
+  spinner.style.display = 'flex';
 }
 
 // Menyembunyikan loading spinner
 function hideLoading() {
-  const spinner = document.getElementById('loading-spinner');
-  spinner.style.display = 'none';  // Menyembunyikan spinner loading
+  const spinner = document.querySelector('.loading-spinner');
+  spinner.style.display = 'none';
 }
 
 // Fungsi untuk mendapatkan media dari URL yang dimasukkan
 async function fetchMedia() {
-  const url = document.getElementById('url').value.trim();  // Mengambil dan membersihkan input URL
+  const url = document.getElementById('url').value.trim();
   if (!url) {
     alert("Masukkan URL!");
     return;
   }
 
-  clearPreview();  // Clear previous media preview
-  showLoading();  // Menampilkan spinner loading
+  clearPreview();
+  showLoading();
 
   try {
     // Menambah timeout untuk request
@@ -39,7 +39,7 @@ async function fetchMedia() {
 
     const data = await response.json();
 
-    hideLoading();  // Menghilangkan spinner setelah mendapatkan hasil
+    hideLoading();
 
     // Validasi data dengan lebih ketat
     if (!data.status) {
@@ -54,8 +54,8 @@ async function fetchMedia() {
 
     const mediaPreview = document.getElementById('media-preview');
     const medias = data.result.medias;
-    const platformName = data.result.source || "Unknown"; // Extracting platform
-    const caption = data.result.title || "No caption"; // Caption of the media
+    const platformName = data.result.source || "Unknown";
+    const caption = data.result.title || "No caption";
 
     mediaPreview.innerHTML = '';
 
@@ -85,11 +85,9 @@ async function fetchMedia() {
       return;
     }
 
-    document.getElementById('media-details').innerHTML = `
-      <p><strong>Platform:</strong> ${platformName}</p>
-      <p><strong>Caption:</strong> ${caption}</p>
-      <p><strong>By RizkyMaxz</strong></p>
-    `;
+    // Update media details dengan ID yang tepat
+    document.getElementById('platform').textContent = platformName;
+    document.getElementById('caption').textContent = caption.substring(0, 100) + (caption.length > 100 ? '...' : '');
 
     document.getElementById('result').style.display = 'block';
   } catch (error) {
@@ -104,7 +102,7 @@ async function fetchMedia() {
   }
 }
 
-// Fungsi untuk mendownload media dengan proxy
+// Fungsi untuk mendownload media
 function autoDownload(type) {
   let downloadLink;
 
@@ -120,12 +118,9 @@ function autoDownload(type) {
   }
 
   const downloadBtn = document.getElementById(`download-${type}-btn`);
-  const originalText = downloadBtn.textContent;
-  downloadBtn.textContent = 'Sedang download...';
+  const originalText = downloadBtn.innerHTML;
+  downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang download...';
   downloadBtn.disabled = true;
-
-  // Gunakan proxy untuk menghindari CORS issues
-  const proxyUrl = `https://cors-anywhere.herokuapp.com/${downloadLink}`;
 
   fetch(downloadLink, {
     mode: 'cors',
@@ -152,7 +147,7 @@ function autoDownload(type) {
       URL.revokeObjectURL(url);
 
       // Reset button
-      downloadBtn.textContent = originalText;
+      downloadBtn.innerHTML = originalText;
       downloadBtn.disabled = false;
 
       clearPreview();
@@ -163,7 +158,7 @@ function autoDownload(type) {
       alert("Terjadi kesalahan dalam mengunduh file.\n\nError: " + err.message);
       
       // Reset button
-      downloadBtn.textContent = originalText;
+      downloadBtn.innerHTML = originalText;
       downloadBtn.disabled = false;
     });
 }
@@ -176,8 +171,13 @@ function generateFileName(type) {
 }
 
 function clearPreview() {
-  document.getElementById('media-preview').innerHTML = ''; 
-  document.getElementById('download-video-btn').disabled = true; 
+  document.getElementById('media-preview').innerHTML = `
+    <div style="text-align: center; color: #999; padding: 40px 20px;">
+      <i class="fas fa-file-video" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+      <p>Media akan ditampilkan di sini</p>
+    </div>
+  `;
+  document.getElementById('download-video-btn').disabled = true;
   document.getElementById('download-music-btn').disabled = true;
   
   // Clear stored links
