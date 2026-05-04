@@ -3,45 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Platform Downloader</title>
+  <title>All Platform Downloader | Download Video & Music</title>
   <link rel="icon" href="https://res.cloudinary.com/dsx9alwop/image/upload/v1777290949/aog1k4zchcl0onzlynvx.jpg" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="stars"></div>
+
   <div class="container">
-    <h1>All Platform Downloader</h1>
-
-    <div class="platform-selector">
-      <button class="platform-btn" onclick="showPlatform('all')">Download All Platform</button>
+    <!-- Header Section -->
+    <div class="header-section">
+      <div class="logo-icon">
+        <i class="fas fa-download"></i>
+      </div>
+      <h1>All Platform Downloader</h1>
+      <p class="subtitle">Download Video & Music dari Semua Platform Populer</p>
     </div>
 
-    <div class="download-section" id="download-section">
-      <h3>Masukkan URL</h3>
-      <div class="input-container">
-        <input type="text" id="url" placeholder="Masukkan URL untuk download">
+    <!-- Download Section -->
+    <div class="download-section">
+      <div class="input-wrapper">
+        <i class="fas fa-link input-icon"></i>
+        <input 
+          type="text" 
+          id="url" 
+          placeholder="Masukkan URL (TikTok, Instagram, YouTube, dll...)"
+        >
       </div>
-      <button class="download-btn" onclick="fetchMedia()">Download All</button>
-      <div class="loading-spinner" id="loading-spinner"></div>
+      <button class="download-btn" onclick="fetchMedia()">
+        <i class="fas fa-search"></i>
+        Cari & Download
+      </button>
+      <div class="loading-spinner">
+        <div class="spinner-circle"></div>
+      </div>
     </div>
 
-    <div class="result" id="result" style="display: none;">
-      <h3>Pratinjau Media</h3>
-      <div id="media-preview">
-        <img src="https://via.placeholder.com/640x360.png" alt="Media Preview" class="media-thumbnail">
+    <!-- Result Section -->
+    <div class="result" id="result">
+      <div class="result-header">
+        <h3><i class="fas fa-play-circle"></i> Pratinjau Media</h3>
       </div>
-      <div id="media-details">
-        <!-- Additional media details such as social media name, caption, and duration -->
+
+      <div class="media-container">
+        <div class="media-preview" id="media-preview">
+          <div style="text-align: center; color: #999; padding: 40px 20px;">
+            <i class="fas fa-file-video" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+            <p>Media akan ditampilkan di sini</p>
+          </div>
+        </div>
       </div>
+
+      <div class="media-details" id="media-details">
+        <p><strong><i class="fas fa-globe"></i> Platform:</strong> <span id="platform">-</span></p>
+        <p><strong><i class="fas fa-quote-left"></i> Caption:</strong> <span id="caption">-</span></p>
+        <p><strong><i class="fas fa-heart"></i> By RizkyMaxz</strong></p>
+      </div>
+
       <div class="download-buttons">
-        <button id="download-video-btn" onclick="autoDownload('video')" disabled>Download Video</button>
-        <button id="download-music-btn" onclick="autoDownload('music')" disabled>Download Music</button>
+        <button id="download-video-btn" class="btn-video" onclick="autoDownload('video')" disabled>
+          <i class="fas fa-video"></i>
+          Download Video
+        </button>
+        <button id="download-music-btn" class="btn-music" onclick="autoDownload('music')" disabled>
+          <i class="fas fa-music"></i>
+          Download Music
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section">
+      <div class="info-card">
+        <i class="fas fa-shield-alt"></i>
+        <h4>100% Aman</h4>
+        <p>Tanpa malware atau iklan yang mengganggu</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-bolt"></i>
+        <h4>Sangat Cepat</h4>
+        <p>Download langsung tanpa kompresi</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-globe"></i>
+        <h4>Multi Platform</h4>
+        <p>Semua platform media sosial populer</p>
       </div>
     </div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
-    <p>Made with ❤️ by <a href="https://tiktok.com/@ben.mister.ben" target="_blank">RizkyMaxz</a></p>
-    <p>© 2026 Social Media Downloader. All rights reserved.</p>
+    <div class="footer-content">
+      <p>Made with <i class="fas fa-heart"></i> by <a href="https://tiktok.com/@ben.mister.ben" target="_blank">RizkyMaxz</a></p>
+      <p>© 2026 Social Media Downloader. All rights reserved.</p>
+    </div>
   </div>
 
   <script src="script.js"></script>
