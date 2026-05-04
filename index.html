@@ -3,103 +3,431 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Platform Downloader | Download Video & Music</title>
+  <title>Premium Video & Music Downloader | Download dari Semua Platform</title>
+  <meta name="description" content="Download video dan musik dari TikTok, Instagram, YouTube, dan platform lainnya dengan kualitas terbaik.">
   <link rel="icon" href="https://res.cloudinary.com/dsx9alwop/image/upload/v1777290949/aog1k4zchcl0onzlynvx.jpg" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="stars"></div>
-
-  <div class="container">
-    <!-- Header Section -->
-    <div class="header-section">
-      <div class="logo-icon">
-        <i class="fas fa-download"></i>
-      </div>
-      <h1>All Platform Downloader</h1>
-      <p class="subtitle">Download Video & Music dari Semua Platform Populer</p>
+  <!-- Background Elements -->
+  <div class="background-container">
+    <div class="stars"></div>
+    <div class="animated-bg"></div>
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
     </div>
+  </div>
 
-    <!-- Download Section -->
-    <div class="download-section">
-      <div class="input-wrapper">
-        <i class="fas fa-link input-icon"></i>
-        <input 
-          type="text" 
-          id="url" 
-          placeholder="Masukkan URL (TikTok, Instagram, YouTube, dll...)"
-        >
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-cloud-download-alt"></i>
+        <span>MediaDL Pro</span>
       </div>
-      <button class="download-btn" onclick="fetchMedia()">
-        <i class="fas fa-search"></i>
-        Cari & Download
-      </button>
-      <div class="loading-spinner">
-        <div class="spinner-circle"></div>
+      <div class="nav-menu">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#platforms" class="nav-link">Platforms</a>
       </div>
     </div>
+  </nav>
 
-    <!-- Result Section -->
-    <div class="result" id="result">
-      <div class="result-header">
-        <h3><i class="fas fa-play-circle"></i> Pratinjau Media</h3>
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            <span class="gradient-text">Download Media</span>
+            <span class="highlight">Dari Mana Saja</span>
+          </h1>
+          <p class="hero-subtitle">Aplikasi downloader terpercaya untuk video, musik, dan konten dari semua platform media sosial populer. Cepat, Aman, dan Gratis!</p>
+          
+          <div class="cta-buttons">
+            <button class="btn btn-primary" onclick="document.querySelector('.download-section').scrollIntoView({behavior: 'smooth'})">
+              <i class="fas fa-play"></i> Mulai Download
+            </button>
+            <button class="btn btn-secondary">
+              <i class="fas fa-star"></i> Fitur Premium
+            </button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <h3>10M+</h3>
+              <p>Downloads</p>
+            </div>
+            <div class="stat">
+              <h3>50+</h3>
+              <p>Platforms</p>
+            </div>
+            <div class="stat">
+              <h3>99.9%</h3>
+              <p>Success Rate</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <i class="fas fa-download"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="download-section" id="download">
+    <div class="container">
+      <div class="section-header">
+        <h2>Download Sekarang</h2>
+        <p>Masukkan URL video atau musik yang ingin Anda download</p>
       </div>
 
-      <div class="media-container">
-        <div class="media-preview" id="media-preview">
-          <div style="text-align: center; color: #999; padding: 40px 20px;">
-            <i class="fas fa-file-video" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
-            <p>Media akan ditampilkan di sini</p>
+      <div class="download-card">
+        <div class="input-group">
+          <div class="input-wrapper">
+            <i class="fas fa-link input-icon"></i>
+            <input 
+              type="text" 
+              id="url" 
+              class="input-field"
+              placeholder="Paste URL dari TikTok, Instagram, YouTube, SoundCloud..."
+              onkeypress="if(event.key === 'Enter') fetchMedia()"
+            >
+            <button class="btn-clear" onclick="document.getElementById('url').value = ''" id="clearBtn" style="display: none;">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <button class="download-btn" onclick="fetchMedia()">
+            <i class="fas fa-search"></i>
+            <span>Cari & Download</span>
+          </button>
+        </div>
+
+        <div class="loading-spinner" id="loadingSpinner">
+          <div class="spinner-circle"></div>
+          <p>Sedang memproses...</p>
+        </div>
+
+        <div class="url-suggestions">
+          <span>Platform yang didukung:</span>
+          <div class="platform-badges">
+            <span class="badge">
+              <i class="fab fa-tiktok"></i> TikTok
+            </span>
+            <span class="badge">
+              <i class="fab fa-instagram"></i> Instagram
+            </span>
+            <span class="badge">
+              <i class="fab fa-youtube"></i> YouTube
+            </span>
+            <span class="badge">
+              <i class="fab fa-spotify"></i> Spotify
+            </span>
+            <span class="badge">
+              <i class="fas fa-plus"></i> +50 Lainnya
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Result Section -->
+  <section class="result-section" id="result" style="display: none;">
+    <div class="container">
+      <div class="result-card">
+        <div class="result-header">
+          <h3><i class="fas fa-play-circle"></i> Pratinjau Media</h3>
+          <button class="btn-close" onclick="hideResult()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="media-container">
+          <div class="media-preview" id="media-preview">
+            <div class="preview-placeholder">
+              <i class="fas fa-file-video"></i>
+              <p>Media akan ditampilkan di sini</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="media-info">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-globe"></i> Platform:</span>
+            <span class="info-value" id="platform">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-quote-left"></i> Caption:</span>
+            <span class="info-value" id="caption">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-heart"></i> Creator:</span>
+            <span class="info-value">RizkyMaxz</span>
+          </div>
+        </div>
+
+        <div class="download-options">
+          <button id="download-video-btn" class="download-option-btn btn-video" onclick="autoDownload('video')" disabled>
+            <div class="option-icon">
+              <i class="fas fa-video"></i>
+            </div>
+            <div class="option-info">
+              <h4>Download Video</h4>
+              <p>Kualitas Terbaik</p>
+            </div>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+
+          <button id="download-music-btn" class="download-option-btn btn-music" onclick="autoDownload('music')" disabled>
+            <div class="option-icon">
+              <i class="fas fa-music"></i>
+            </div>
+            <div class="option-info">
+              <h4>Download Audio</h4>
+              <p>Format MP3</p>
+            </div>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="hideResult()">
+          <i class="fas fa-arrow-left"></i> Download Lagi
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Fitur Unggulan</h2>
+        <p>Semua yang Anda butuhkan untuk download media dengan mudah</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>100% Aman</h3>
+          <p>Tanpa malware, virus, atau iklan yang mengganggu. Privasi Anda terlindungi.</p>
+          <div class="feature-badge">Verified</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Sangat Cepat</h3>
+          <p>Download instan tanpa kompresi. Kecepatan hingga 100MB/s.</p>
+          <div class="feature-badge">Lightning Fast</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>50+ Platform</h3>
+          <p>Mendukung TikTok, Instagram, YouTube, Spotify, dan banyak lagi.</p>
+          <div class="feature-badge">Multi Platform</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <h3>HD Quality</h3>
+          <p>Download dalam kualitas HD/4K. Pilih resolusi yang Anda inginkan.</p>
+          <div class="feature-badge">Ultra HD</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-headphones"></i>
+          </div>
+          <h3>Audio Extract</h3>
+          <p>Ekstrak audio dari video. Konversi ke MP3, WAV, atau format lain.</p>
+          <div class="feature-badge">Professional</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>Mobile Friendly</h3>
+          <p>Bekerja sempurna di semua perangkat. Desktop, tablet, atau smartphone.</p>
+          <div class="feature-badge">Responsive</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Platforms Section -->
+  <section class="platforms-section" id="platforms">
+    <div class="container">
+      <div class="section-header">
+        <h2>Platform yang Didukung</h2>
+        <p>Kompatibel dengan ratusan platform media sosial dan streaming</p>
+      </div>
+
+      <div class="platforms-grid">
+        <div class="platform-item">
+          <i class="fab fa-tiktok"></i>
+          <span>TikTok</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-instagram"></i>
+          <span>Instagram</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-youtube"></i>
+          <span>YouTube</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-facebook"></i>
+          <span>Facebook</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-twitter"></i>
+          <span>Twitter/X</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-snapchat"></i>
+          <span>Snapchat</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-spotify"></i>
+          <span>Spotify</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-soundcloud"></i>
+          <span>SoundCloud</span>
+        </div>
+        <div class="platform-item">
+          <i class="fas fa-music"></i>
+          <span>Apple Music</span>
+        </div>
+        <div class="platform-item">
+          <i class="fab fa-twitch"></i>
+          <span>Twitch</span>
+        </div>
+        <div class="platform-item">
+          <i class="fas fa-video"></i>
+          <span>Vimeo</span>
+        </div>
+        <div class="platform-item">
+          <i class="fas fa-plus"></i>
+          <span>+50 Lainnya</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Pertanyaan Umum</h2>
+        <p>Jawaban untuk pertanyaan yang sering diajukan</p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Apakah layanan ini gratis?</h4>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Ya, layanan kami 100% gratis. Tidak ada biaya tersembunyi atau langganan yang diperlukan.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Berapa lama waktu download?</h4>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Waktu download tergantung ukuran file dan kecepatan internet Anda. Rata-rata 30 detik untuk file 100MB.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Apakah data saya aman?</h4>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Privasi Anda adalah prioritas kami. Kami tidak menyimpan data pribadi atau URL yang Anda input.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Format apa yang didukung?</h4>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Kami mendukung MP4 untuk video, MP3 untuk audio, dan berbagai format lainnya sesuai platform.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4><i class="fas fa-cloud-download-alt"></i> MediaDL Pro</h4>
+          <p>Download media dari ratusan platform dengan mudah dan cepat.</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Link Cepat</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#platforms">Platforms</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Ikuti Kami</h4>
+          <div class="social-links">
+            <a href="https://tiktok.com/@ben.mister.ben" target="_blank" title="TikTok">
+              <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="#" target="_blank" title="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" target="_blank" title="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="media-details" id="media-details">
-        <p><strong><i class="fas fa-globe"></i> Platform:</strong> <span id="platform">-</span></p>
-        <p><strong><i class="fas fa-quote-left"></i> Caption:</strong> <span id="caption">-</span></p>
-        <p><strong><i class="fas fa-heart"></i> By RizkyMaxz</strong></p>
-      </div>
-
-      <div class="download-buttons">
-        <button id="download-video-btn" class="btn-video" onclick="autoDownload('video')" disabled>
-          <i class="fas fa-video"></i>
-          Download Video
-        </button>
-        <button id="download-music-btn" class="btn-music" onclick="autoDownload('music')" disabled>
-          <i class="fas fa-music"></i>
-          Download Music
-        </button>
+      <div class="footer-bottom">
+        <p>Made with <i class="fas fa-heart"></i> by <a href="https://tiktok.com/@ben.mister.ben" target="_blank">RizkyMaxz</a></p>
+        <p>© 2026 MediaDL Pro. All rights reserved.</p>
       </div>
     </div>
-
-    <!-- Info Section -->
-    <div class="info-section">
-      <div class="info-card">
-        <i class="fas fa-shield-alt"></i>
-        <h4>100% Aman</h4>
-        <p>Tanpa malware atau iklan yang mengganggu</p>
-      </div>
-      <div class="info-card">
-        <i class="fas fa-bolt"></i>
-        <h4>Sangat Cepat</h4>
-        <p>Download langsung tanpa kompresi</p>
-      </div>
-      <div class="info-card">
-        <i class="fas fa-globe"></i>
-        <h4>Multi Platform</h4>
-        <p>Semua platform media sosial populer</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-content">
-      <p>Made with <i class="fas fa-heart"></i> by <a href="https://tiktok.com/@ben.mister.ben" target="_blank">RizkyMaxz</a></p>
-      <p>© 2026 Social Media Downloader. All rights reserved.</p>
-    </div>
-  </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
