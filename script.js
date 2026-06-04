@@ -1,5 +1,5 @@
 // ============================================
-// MEDIABOX - ADVANCED JAVASCRIPT ENGINE
+// DOMAIN ANALYZER PRO - ADVANCED ENGINE
 // ============================================
 
 // ============ THEME TOGGLE ============
@@ -11,18 +11,17 @@ function updateTheme(isDark) {
     document.body.classList.add('dark-mode');
     localStorage.setItem('theme', 'dark');
     if (themeToggle) {
-      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i><span class="toggle-label">Light</span>';
     }
   } else {
     document.body.classList.remove('dark-mode');
     localStorage.setItem('theme', 'light');
     if (themeToggle) {
-      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i><span class="toggle-label">Dark</span>';
     }
   }
 }
 
-// Load saved theme
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
   updateTheme(savedTheme === 'dark');
@@ -43,14 +42,12 @@ const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
 window.addEventListener('scroll', function() {
-  // Add shadow to navbar on scroll
   if (window.scrollY > 50) {
     if (navbar) navbar.classList.add('scrolled');
   } else {
     if (navbar) navbar.classList.remove('scrolled');
   }
 
-  // Update active nav link
   let current = '';
   sections.forEach(section => {
     const sectionTop = section.offsetTop;
@@ -87,28 +84,30 @@ navLinks.forEach(link => {
 });
 
 // ============ INPUT HANDLING ============
-const urlInput = document.getElementById('url');
+const domainInput = document.getElementById('domainInput');
 const clearBtn = document.getElementById('clearBtn');
 
-if (urlInput && clearBtn) {
-  urlInput.addEventListener('focus', function() {
-    if (this.value) {
-      clearBtn.style.display = 'block';
-    }
+if (domainInput && clearBtn) {
+  domainInput.addEventListener('focus', function() {
+    if (this.value) clearBtn.style.display = 'block';
   });
 
-  urlInput.addEventListener('blur', function() {
-    if (!this.value) {
-      clearBtn.style.display = 'none';
-    }
+  domainInput.addEventListener('blur', function() {
+    if (!this.value) clearBtn.style.display = 'none';
   });
 
-  urlInput.addEventListener('input', function() {
+  domainInput.addEventListener('input', function() {
     if (this.value) {
       clearBtn.style.display = 'block';
     } else {
       clearBtn.style.display = 'none';
     }
+  });
+
+  clearBtn.addEventListener('click', function() {
+    domainInput.value = '';
+    clearBtn.style.display = 'none';
+    domainInput.focus();
   });
 }
 
@@ -123,436 +122,269 @@ function hideLoading() {
   if (spinner) spinner.style.display = 'none';
 }
 
-// ============ GALLERY SYSTEM ============
-class PhotoGallery {
-  constructor() {
-    this.photos = this.loadPhotos();
-    this.initGallery();
-  }
-
-  loadPhotos() {
-    const stored = localStorage.getItem('galleryPhotos');
-    return stored ? JSON.parse(stored) : [];
-  }
-
-  savePhotos() {
-    localStorage.setItem('galleryPhotos', JSON.stringify(this.photos));
-  }
-
-  addPhoto(dataUrl) {
-    this.photos.push({
-      id: Date.now(),
-      data: dataUrl,
-      timestamp: new Date().toLocaleString()
-    });
-    this.savePhotos();
-    this.render();
-  }
-
-  deletePhoto(id) {
-    this.photos = this.photos.filter(p => p.id !== id);
-    this.savePhotos();
-    this.render();
-  }
-
-  downloadPhoto(dataUrl, filename) {
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = filename || `photo_${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    showToast('ðŸ“¥ Foto berhasil didownload!', 'success');
-  }
-
-  initGallery() {
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('photoInput');
-
-    if (!uploadArea || !fileInput) return;
-
-    // Drag and drop
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      this.handleFiles(e.dataTransfer.files);
-    });
-
-    // Click to upload
-    uploadArea.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', (e) => {
-      this.handleFiles(e.target.files);
-    });
-
-    this.render();
-  }
-
-  handleFiles(files) {
-    Array.from(files).forEach(file => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.addPhoto(e.target.result);
-          showToast('âœ¨ Foto berhasil ditambahkan!', 'success');
-        };
-        reader.readAsDataURL(file);
-      } else {
-        showToast('âŒ Hanya file gambar yang diterima!', 'error');
-      }
-    });
-  }
-
-  render() {
-    const gallery = document.getElementById('photoGallery');
-    if (!gallery) return;
-
-    if (this.photos.length === 0) {
-      gallery.innerHTML = '<p class="empty-gallery">Tidak ada foto. Mulai upload sekarang!</p>';
-      return;
-    }
-
-    gallery.innerHTML = this.photos.map(photo => `
-      <div class="photo-item">
-        <img src="${photo.data}" alt="photo">
-        <div class="photo-overlay">
-          <button class="photo-btn btn-preview" onclick="photoGallery.previewPhoto('${photo.data}')">
-            <i class="fas fa-eye"></i> Preview
-          </button>
-          <button class="photo-btn btn-download" onclick="photoGallery.downloadPhoto('${photo.data}', 'photo_${photo.id}.png')">
-            <i class="fas fa-download"></i> Download
-          </button>
-          <button class="photo-btn btn-delete" onclick="photoGallery.deletePhoto(${photo.id})">
-            <i class="fas fa-trash"></i> Hapus
-          </button>
-        </div>
-        <p class="photo-date">${photo.timestamp}</p>
-      </div>
-    `).join('');
-  }
-
-  previewPhoto(dataUrl) {
-    const modal = document.getElementById('previewModal');
-    const modalImg = document.getElementById('previewImage');
-    if (modal && modalImg) {
-      modalImg.src = dataUrl;
-      modal.style.display = 'flex';
-    }
-  }
+// ============ DOMAIN VALIDATION ============
+function isValidDomain(domain) {
+  const domainRegex = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9]{2,}$/i;
+  return domainRegex.test(domain);
 }
 
-let photoGallery;
-
-// ============ MODAL HANDLER ============
-function closeModal() {
-  const modal = document.getElementById('previewModal');
-  if (modal) modal.style.display = 'none';
-}
-
-window.addEventListener('click', (e) => {
-  const modal = document.getElementById('previewModal');
-  if (e.target === modal) {
-    modal.style.display = 'none';
-  }
-});
-
-// ============ FETCH MEDIA ============
-async function fetchMedia() {
-  const url = document.getElementById('url')?.value.trim();
+// ============ ANALYZE DOMAIN FUNCTION ============
+async function analyzeDomain() {
+  const domain = domainInput?.value.trim().toLowerCase();
   
-  if (!url) {
-    showToast('Paste URL terlebih dahulu!', 'error');
+  if (!domain) {
+    showToast('Enter a domain to analyze', 'error');
     return;
   }
 
-  clearPreview();
+  if (!isValidDomain(domain)) {
+    showToast('Invalid domain format', 'error');
+    return;
+  }
+
   showLoading();
-
+  
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-    // Main API call with better CORS handling
-    const response = await fetch(`https://api.theresav.biz.id/download/aio?url=${encodeURIComponent(url)}&apikey=P4QlB`, {
-      signal: controller.signal,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+    // Simulate API call with mock data (Replace with real API)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const mockData = {
+      whois: {
+        domain: domain,
+        registrar: 'Example Registrar Inc.',
+        created: '2015-03-15',
+        updated: '2024-06-04',
+        expires: '2025-03-15',
+        status: 'Active'
       },
-      mode: 'cors',
-      credentials: 'omit'
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      if (response.status === 0 || response.type === 'opaque') {
-        throw new Error('CORS Error - Server tidak mengizinkan akses');
+      dns: {
+        a: '93.184.216.34',
+        mx: 'mail.' + domain,
+        ns: 'ns1.' + domain + ', ns2.' + domain,
+        cname: 'www.' + domain,
+        txt: 'v=spf1 include:_spf.google.com ~all',
+        soa: 'Primary DNS Server'
+      },
+      ssl: {
+        provider: 'Let\'s Encrypt',
+        validFrom: '2024-01-15',
+        expires: '2025-01-15',
+        algorithm: 'RSA-2048',
+        keysize: '2048 bits',
+        status: 'Valid'
+      },
+      stats: {
+        age: '9 years',
+        rank: '#1,234',
+        alexa: '#5,678',
+        authority: '87/100',
+        backlinks: '45,230',
+        value: '$125,000 - $250,000'
+      },
+      ip: {
+        address: '93.184.216.34',
+        country: 'United States',
+        isp: 'Verizon Communications',
+        hosting: 'Verizon Hosting',
+        lat: '37.7749',
+        lon: '-122.4194'
+      },
+      security: {
+        malware: 'Clean',
+        phishing: 'Safe',
+        spam: 'Low',
+        reputation: 'Excellent',
+        trust: 'High',
+        score: '95/100'
       }
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
+    };
 
-    const data = await response.json();
+    displayResults(mockData);
     hideLoading();
-
-    if (!data.status) {
-      showToast('API Error. Silakan coba lagi.', 'error');
-      return;
-    }
-
-    if (!data.result || !data.result.medias || data.result.medias.length === 0) {
-      showToast('Media tidak ditemukan. Check URL Anda.', 'error');
-      return;
-    }
-
-    const mediaPreview = document.getElementById('media-preview');
-    const medias = data.result.medias;
-    const platformName = data.result.source || "Unknown";
-    const caption = data.result.title || "No caption";
-
-    if (mediaPreview) mediaPreview.innerHTML = '';
-
-    const videoMedia = medias.find(media => media.type === 'video');
-    if (videoMedia && videoMedia.url) {
-      const videoUrl = videoMedia.url;
-      const videoHtml = `<video controls width="100%" crossorigin="anonymous" style="border-radius: 8px;"><source src="${videoUrl}" type="video/mp4">Browser Anda tidak mendukung video tag</video>`;
-      if (mediaPreview) mediaPreview.innerHTML += videoHtml;
-      const videoBtn = document.getElementById('download-video-btn');
-      if (videoBtn) {
-        videoBtn.disabled = false;
-        window.videoDownloadLink = videoUrl;
-      }
-    } else {
-      const videoBtn = document.getElementById('download-video-btn');
-      if (videoBtn) videoBtn.disabled = true;
-    }
-
-    const musicMedia = medias.find(media => media.type === 'audio');
-    if (musicMedia && musicMedia.url) {
-      const audioUrl = musicMedia.url;
-      const audioHtml = `<audio controls width="100%" crossorigin="anonymous" style="width: 100%; margin-top: 1rem;"><source src="${audioUrl}" type="audio/mpeg">Browser Anda tidak mendukung audio tag</audio>`;
-      if (mediaPreview) mediaPreview.innerHTML += audioHtml;
-      const musicBtn = document.getElementById('download-music-btn');
-      if (musicBtn) {
-        musicBtn.disabled = false;
-        window.musicDownloadLink = audioUrl;
-      }
-    } else {
-      const musicBtn = document.getElementById('download-music-btn');
-      if (musicBtn) musicBtn.disabled = true;
-    }
-
-    if (!videoMedia && !musicMedia) {
-      showToast('Media tidak ditemukan.', 'error');
-      return;
-    }
-
-    const platformEl = document.getElementById('platform');
-    const captionEl = document.getElementById('caption');
-    if (platformEl) platformEl.textContent = platformName;
-    if (captionEl) captionEl.textContent = caption.substring(0, 100) + (caption.length > 100 ? '...' : '');
-
-    showResult();
-    showToast('âœ¨ Media dimuat berhasil!', 'success');
+    showToast('Domain analyzed successfully!', 'success');
 
   } catch (error) {
     hideLoading();
-    console.error('MediaBox Error:', error);
-    
-    if (error.name === 'AbortError') {
-      showToast('Timeout. Coba lagi.', 'error');
-    } else if (error.message.includes('CORS')) {
-      showToast('CORS Error - Coba lagi dengan URL berbeda.', 'error');
-    } else if (error.message.includes('Failed to fetch')) {
-      showToast('Network Error - Periksa koneksi internet Anda.', 'error');
-    } else {
-      showToast('Error: ' + error.message, 'error');
-    }
+    console.error('Analysis error:', error);
+    showToast('Error analyzing domain: ' + error.message, 'error');
   }
 }
 
-// ============ SHOW/HIDE RESULT ============
-function showResult() {
-  const resultSection = document.getElementById('result');
-  if (resultSection) {
-    resultSection.style.display = 'block';
-    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// ============ ANALYZE DOMAIN QUICK ============
+function analyzeDomainQuick(domain) {
+  domainInput.value = domain;
+  analyzeDomain();
+}
+
+// ============ DISPLAY RESULTS ============
+function displayResults(data) {
+  if (!data) return;
+
+  // Update WHOIS
+  document.getElementById('whois-domain').textContent = data.whois.domain || '-';
+  document.getElementById('whois-registrar').textContent = data.whois.registrar || '-';
+  document.getElementById('whois-created').textContent = data.whois.created || '-';
+  document.getElementById('whois-updated').textContent = data.whois.updated || '-';
+  document.getElementById('whois-expires').textContent = data.whois.expires || '-';
+  document.getElementById('whois-status').textContent = data.whois.status || '-';
+  document.getElementById('resultsDomain').textContent = data.whois.domain || '-';
+
+  // Update DNS
+  document.getElementById('dns-a').textContent = data.dns.a || '-';
+  document.getElementById('dns-mx').textContent = data.dns.mx || '-';
+  document.getElementById('dns-ns').textContent = data.dns.ns || '-';
+  document.getElementById('dns-cname').textContent = data.dns.cname || '-';
+  document.getElementById('dns-txt').textContent = data.dns.txt || '-';
+  document.getElementById('dns-soa').textContent = data.dns.soa || '-';
+
+  // Update SSL
+  document.getElementById('ssl-provider').textContent = data.ssl.provider || '-';
+  document.getElementById('ssl-valid-from').textContent = data.ssl.validFrom || '-';
+  document.getElementById('ssl-expires').textContent = data.ssl.expires || '-';
+  document.getElementById('ssl-algo').textContent = data.ssl.algorithm || '-';
+  document.getElementById('ssl-keysize').textContent = data.ssl.keysize || '-';
+  document.getElementById('ssl-status').textContent = data.ssl.status || '-';
+
+  // Update Stats
+  document.getElementById('stats-age').textContent = data.stats.age || '-';
+  document.getElementById('stats-rank').textContent = data.stats.rank || '-';
+  document.getElementById('stats-alexa').textContent = data.stats.alexa || '-';
+  document.getElementById('stats-authority').textContent = data.stats.authority || '-';
+  document.getElementById('stats-backlinks').textContent = data.stats.backlinks || '-';
+  document.getElementById('stats-value').textContent = data.stats.value || '-';
+
+  // Update IP
+  document.getElementById('ip-address').textContent = data.ip.address || '-';
+  document.getElementById('ip-country').textContent = data.ip.country || '-';
+  document.getElementById('ip-isp').textContent = data.ip.isp || '-';
+  document.getElementById('ip-hosting').textContent = data.ip.hosting || '-';
+  document.getElementById('ip-lat').textContent = data.ip.lat || '-';
+  document.getElementById('ip-lon').textContent = data.ip.lon || '-';
+
+  // Update Security
+  document.getElementById('sec-malware').textContent = data.security.malware || '-';
+  document.getElementById('sec-phishing').textContent = data.security.phishing || '-';
+  document.getElementById('sec-spam').textContent = data.security.spam || '-';
+  document.getElementById('sec-reputation').textContent = data.security.reputation || '-';
+  document.getElementById('sec-trust').textContent = data.security.trust || '-';
+  document.getElementById('sec-score').textContent = data.security.score || '-';
+
+  showResults();
+}
+
+// ============ SHOW/HIDE RESULTS ============
+function showResults() {
+  const resultsSection = document.getElementById('results');
+  if (resultsSection) {
+    resultsSection.style.display = 'block';
+    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
-function hideResult() {
-  const resultSection = document.getElementById('result');
-  if (resultSection) resultSection.style.display = 'none';
-  const urlInput = document.getElementById('url');
-  if (urlInput) urlInput.value = '';
-  const clearBtn = document.getElementById('clearBtn');
+function hideResults() {
+  const resultsSection = document.getElementById('results');
+  if (resultsSection) resultsSection.style.display = 'none';
+  if (domainInput) domainInput.value = '';
   if (clearBtn) clearBtn.style.display = 'none';
 }
 
-// ============ AUTO DOWNLOAD WITH CORS HANDLING ============
-function autoDownload(type) {
-  let downloadLink;
-
-  if (type === 'video') {
-    downloadLink = window.videoDownloadLink;
-  } else if (type === 'music') {
-    downloadLink = window.musicDownloadLink;
-  }
-
-  if (!downloadLink) {
-    showToast('Link tidak tersedia.', 'error');
-    return;
-  }
-
-  const downloadBtn = document.getElementById(`download-${type}-btn`);
-  if (!downloadBtn) return;
-
-  const originalHTML = downloadBtn.innerHTML;
-  downloadBtn.innerHTML = '<div class="option-icon"><i class="fas fa-spinner fa-spin"></i></div><div class="option-info"><h4>Downloading...</h4><p>Jangan tutup halaman</p></div>';
-  downloadBtn.disabled = true;
-
-  // Multiple download strategies
-  downloadWithRetry(downloadLink, type, downloadBtn, originalHTML, 0);
-}
-
-async function downloadWithRetry(url, type, downloadBtn, originalHTML, attempt = 0) {
-  const maxAttempts = 3;
-
-  try {
-    // Strategy 1: Direct fetch with CORS
-    const response = await fetch(url, {
-      mode: 'cors',
-      credentials: 'omit',
-      headers: {
-        'Accept': '*/*',
-        'Origin': window.location.origin
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+// ============ EXPORT RESULTS ============
+function exportResults(format) {
+  const domain = document.getElementById('resultsDomain').textContent;
+  const results = {
+    domain: domain,
+    timestamp: new Date().toISOString(),
+    whois: {
+      registrar: document.getElementById('whois-registrar').textContent,
+      created: document.getElementById('whois-created').textContent,
+      expires: document.getElementById('whois-expires').textContent,
+      status: document.getElementById('whois-status').textContent
+    },
+    dns: {
+      a: document.getElementById('dns-a').textContent,
+      mx: document.getElementById('dns-mx').textContent,
+      ns: document.getElementById('dns-ns').textContent
+    },
+    ssl: {
+      provider: document.getElementById('ssl-provider').textContent,
+      status: document.getElementById('ssl-status').textContent
+    },
+    ip: {
+      address: document.getElementById('ip-address').textContent,
+      country: document.getElementById('ip-country').textContent
     }
+  };
 
-    const blob = await response.blob();
-    
-    if (blob.size === 0) {
-      throw new Error("File kosong - Download gagal");
-    }
-
-    // Successfully downloaded, create download link
-    downloadFile(blob, type, downloadBtn, originalHTML);
-
-  } catch (err) {
-    console.error(`Download attempt ${attempt + 1} failed:`, err);
-
-    if (attempt < maxAttempts - 1) {
-      // Retry with slight delay
-      showToast(`Retry download... (Attempt ${attempt + 2}/${maxAttempts})`, 'error');
-      setTimeout(() => {
-        downloadWithRetry(url, type, downloadBtn, originalHTML, attempt + 1);
-      }, 1000);
-    } else {
-      // All attempts failed, try alternative method
-      console.log('Trying alternative download method...');
-      downloadFileWithElement(url, type, downloadBtn, originalHTML);
-    }
+  if (format === 'json') {
+    downloadJSON(results);
+  } else if (format === 'csv') {
+    downloadCSV(results);
+  } else if (format === 'pdf') {
+    showToast('PDF export coming soon', 'info');
   }
 }
 
-function downloadFile(blob, type, downloadBtn, originalHTML) {
-  try {
-    const a = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    a.href = url;
-    a.download = generateFileName(type);
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    
-    // Trigger download
-    a.click();
-    
-    // Cleanup
-    setTimeout(() => {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      downloadBtn.innerHTML = originalHTML;
-      downloadBtn.disabled = false;
-      showToast('âš¡ Download berhasil!', 'success');
-      hideResult();
-    }, 100);
-
-  } catch (err) {
-    console.error('Download file error:', err);
-    downloadBtn.innerHTML = originalHTML;
-    downloadBtn.disabled = false;
-    showToast('Download error: ' + err.message, 'error');
-  }
+function downloadJSON(data) {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `domain-analysis-${data.domain}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('JSON exported successfully', 'success');
 }
 
-// Alternative download using anchor tag directly
-function downloadFileWithElement(url, type, downloadBtn, originalHTML) {
-  try {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = generateFileName(type);
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    
-    a.click();
-    
-    setTimeout(() => {
-      document.body.removeChild(a);
-      downloadBtn.innerHTML = originalHTML;
-      downloadBtn.disabled = false;
-      showToast('âš¡ Download dimulai!', 'success');
-      hideResult();
-    }, 500);
+function downloadCSV(data) {
+  let csv = 'Domain Analysis Report\n';
+  csv += `Domain,${data.domain}\n`;
+  csv += `Timestamp,${data.timestamp}\n\n`;
+  csv += 'WHOIS Information\n';
+  csv += `Registrar,${data.whois.registrar}\n`;
+  csv += `Created,${data.whois.created}\n`;
+  csv += `Expires,${data.whois.expires}\n`;
+  csv += `Status,${data.whois.status}\n\n`;
+  csv += 'DNS Records\n';
+  csv += `A Record,${data.dns.a}\n`;
+  csv += `MX Record,${data.dns.mx}\n`;
+  csv += `NS Record,${data.dns.ns}\n\n`;
+  csv += 'SSL Certificate\n';
+  csv += `Provider,${data.ssl.provider}\n`;
+  csv += `Status,${data.ssl.status}\n\n`;
+  csv += 'IP & Hosting\n';
+  csv += `IP Address,${data.ip.address}\n`;
+  csv += `Country,${data.ip.country}\n`;
 
-  } catch (err) {
-    console.error('Alternative download error:', err);
-    downloadBtn.innerHTML = originalHTML;
-    downloadBtn.disabled = false;
-    showToast('Download error: ' + err.message, 'error');
-  }
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `domain-analysis-${data.domain}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV exported successfully', 'success');
 }
 
-// ============ GENERATE FILE NAME ============
-function generateFileName(type) {
-  const timestamp = new Date().getTime();
-  const randomSuffix = Math.random().toString(36).substr(2, 5);
-  const extension = type === 'video' ? 'mp4' : 'mp3';
-  return `MediaBox_${timestamp}_${randomSuffix}.${extension}`;
-}
-
-// ============ CLEAR PREVIEW ============
-function clearPreview() {
-  const mediaPreview = document.getElementById('media-preview');
-  if (mediaPreview) {
-    mediaPreview.innerHTML = `
-      <div class="preview-placeholder">
-        <i class="fas fa-film"></i>
-        <p>Media akan ditampilkan di sini</p>
-      </div>
-    `;
-  }
+// ============ COPY TO CLIPBOARD ============
+function copyToClipboard() {
+  const domain = document.getElementById('resultsDomain').textContent;
+  const text = `Domain: ${domain}\n`;
+  const whoisInfo = `Registrar: ${document.getElementById('whois-registrar').textContent}\n`;
+  const dnsInfo = `DNS A: ${document.getElementById('dns-a').textContent}\n`;
+  const ipInfo = `IP: ${document.getElementById('ip-address').textContent}`;
   
-  const videoBtn = document.getElementById('download-video-btn');
-  const musicBtn = document.getElementById('download-music-btn');
-  if (videoBtn) videoBtn.disabled = true;
-  if (musicBtn) musicBtn.disabled = true;
+  const fullText = text + whoisInfo + dnsInfo + ipInfo;
   
-  window.videoDownloadLink = null;
-  window.musicDownloadLink = null;
+  navigator.clipboard.writeText(fullText).then(() => {
+    showToast('Results copied to clipboard!', 'success');
+  }).catch(() => {
+    showToast('Failed to copy to clipboard', 'error');
+  });
 }
 
 // ============ TOGGLE FAQ ============
@@ -579,19 +411,43 @@ function showToast(message, type = 'success') {
   toastMessage.textContent = message;
   toast.style.display = 'flex';
   
-  // Change color based on type
   if (type === 'error') {
     toast.style.background = 'linear-gradient(135deg, #ff4757, #ff006e)';
-    toast.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>' + message + '</span>';
+    toast.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>' + message + '</span><button class="toast-close"><i class="fas fa-xmark"></i></button>';
+  } else if (type === 'info') {
+    toast.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+    toast.innerHTML = '<i class="fas fa-info-circle"></i><span>' + message + '</span><button class="toast-close"><i class="fas fa-xmark"></i></button>';
   } else {
     toast.style.background = 'linear-gradient(135deg, #06ffa5, #00d4ff)';
-    toast.innerHTML = '<i class="fas fa-check-circle"></i><span>' + message + '</span>';
+    toast.innerHTML = '<i class="fas fa-check-circle"></i><span>' + message + '</span><button class="toast-close"><i class="fas fa-xmark"></i></button>';
   }
+
+  document.querySelector('.toast-close')?.addEventListener('click', () => {
+    toast.style.display = 'none';
+  });
 
   setTimeout(() => {
     toast.style.display = 'none';
-  }, 3000);
+  }, 3500);
 }
+
+// ============ API MODAL ============
+function showApiModal() {
+  const modal = document.getElementById('apiModal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeApiModal() {
+  const modal = document.getElementById('apiModal');
+  if (modal) modal.style.display = 'none';
+}
+
+window.addEventListener('click', (e) => {
+  const modal = document.getElementById('apiModal');
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+});
 
 // ============ SMOOTH SCROLL ============
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -609,34 +465,24 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ============ KEYBOARD SHORTCUTS ============
 document.addEventListener('keydown', (e) => {
-  // Ctrl/Cmd + K to focus input
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
     e.preventDefault();
-    if (urlInput) urlInput.focus();
+    if (domainInput) domainInput.focus();
   }
 
-  // Escape to close result
   if (e.key === 'Escape') {
-    const resultSection = document.getElementById('result');
-    if (resultSection && resultSection.style.display !== 'none') {
-      hideResult();
+    const resultsSection = document.getElementById('results');
+    if (resultsSection && resultsSection.style.display !== 'none') {
+      hideResults();
     }
   }
 
-  // Enter to search
-  if (e.key === 'Enter' && document.activeElement === urlInput) {
-    fetchMedia();
+  if (e.key === 'Enter' && document.activeElement === domainInput) {
+    analyzeDomain();
   }
 });
 
-// ============ PREVENT DOUBLE CLICK ON BUTTONS ============
-document.querySelectorAll('button').forEach(btn => {
-  btn.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-  });
-});
-
-// ============ INTERSECTION OBSERVER FOR ANIMATIONS ============
+// ============ INTERSECTION OBSERVER ============
 const observerOptions = {
   threshold: 0.1,
   rootMargin: '0px 0px -100px 0px'
@@ -651,54 +497,74 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Observe all elements with animations
-document.querySelectorAll('.feature-card, .platform-item, .faq-item, .footer-section').forEach(el => {
+document.querySelectorAll('.feature-card, .tool-card, .faq-item, .footer-col').forEach(el => {
   observer.observe(el);
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'all 0.6s ease';
 });
 
-// ============ PAGE VISIBILITY ============
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    console.log('%cMediaBox: Page hidden', 'color: #00d4ff;');
-  } else {
-    console.log('%cMediaBox: Page visible', 'color: #06ffa5;');
-  }
-});
+// ============ PARTICLE CANVAS ANIMATION ============
+const canvas = document.getElementById('particleCanvas');
+if (canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-// ============ UNLOAD WARNING ============
-window.addEventListener('beforeunload', (e) => {
-  const resultSection = document.getElementById('result');
-  if (resultSection && resultSection.style.display !== 'none') {
-    e.preventDefault();
-    e.returnValue = '';
-  }
-});
-
-// ============ PARALLAX EFFECT ============
-document.addEventListener('mousemove', (e) => {
-  const orbs = document.querySelectorAll('.orb');
-  const mouseX = e.clientX / window.innerWidth;
-  const mouseY = e.clientY / window.innerHeight;
+  const particles = [];
   
-  orbs.forEach((orb, index) => {
-    const offset = (index + 1) * 20;
-    orb.style.transform = `translate(${mouseX * offset}px, ${mouseY * offset}px)`;
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 1.5;
+      this.opacity = Math.random() * 0.5 + 0.2;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+      ctx.fillStyle = `rgba(99, 102, 241, ${this.opacity})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 30; i++) {
+    particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   });
-});
+}
 
 // ============ INITIALIZE ============
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize gallery
-  photoGallery = new PhotoGallery();
-  
-  clearPreview();
-  
-  // Add fade-in animation to body
-  document.body.style.animation = 'fadeInUp 0.6s ease';
-  
-  // Log initialization
-  console.log('%câ•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—', 'color: #00d4ff; font-size: 12px;');
-  console.log('%câ•‘  ðŸŽ¬ MEDIABOX INITIALIZED ðŸŽ¬  â•‘', 'color: #00d4ff; font-size: 12px; font-weight: bold;');
-  console.log('%câ•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•', 'color: #00d4ff; font-size: 12px;');
-  console.log('%cMediaBox - All-in-One Media Platform', 'color: #8338ec; font-size: 14px; font-weight: bold;');
+  console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #6366f1; font-size: 12px;');
+  console.log('%c🌐 DOMAIN ANALYZER PRO INITIALIZED 🌐', 'color: #6366f1; font-size: 14px; font-weight: bold;');
+  console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #6366f1; font-size: 12px;');
+  console.log('%cAdvanced Domain Intelligence Platform', 'color: #8b5cf6; font-size: 12px; font-weight: bold;');
+  console.log('%cby @RizkyMaxz', 'color: #ec4899; font-size: 11px;');
 });
